@@ -4,7 +4,7 @@ class Parametric extends BufferGeometry {
   constructor(
     func = (t) => new Vector3(Math.sin(t), t, Math.cos(t)),
     start = 0,
-    end = 6,
+    end = 1,
     rate = 100
   ) {
     super();
