@@ -1,6 +1,8 @@
 import * as THREE from "three";
-import { TransformControls } from "three/examples/jsm/controls/TransformControls";
+import { LineBasicMaterial } from "three";
+//import { TransformControls } from "three/examples/jsm/controls/TransformControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { Parametric } from "./Paramatric.js";
 
 // initialize
 const scene = new THREE.Scene();
@@ -21,13 +23,23 @@ const axis = new THREE.AxesHelper(5);
 
 // add controler
 const controls = new OrbitControls(camera, renderer.domElement);
-const transform = new TransformControls(camera, renderer.domElement);
+//const transform = new TransformControls(camera, renderer.domElement);
+
+// add geomatry
+const parametric = new Parametric();
+
+// add material
+const red = new LineBasicMaterial({ color: "red" });
+
+// add mesh
+const line = new THREE.Line(parametric, red);
 
 // set control poperties
 controls.enableDamping = true;
 
 // add mesh to the scene
 scene.add(grid, axis);
+scene.add(line);
 
 camera.position.set(5, 5, 5);
 controls.update();
