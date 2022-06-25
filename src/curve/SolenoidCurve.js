@@ -1,6 +1,6 @@
 import { Curve, Vector3} from "three";
 
-class SoleniodCurve extends Curve {
+class Soleniod extends Curve {
     
     constructer(period, length, radius) {
         super();
@@ -22,4 +22,4 @@ class SoleniodCurve extends Curve {
     }
 }
 
-export { SoleniodCurve };
+export { Soleniod };
