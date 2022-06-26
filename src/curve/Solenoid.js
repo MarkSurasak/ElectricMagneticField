@@ -14,11 +14,12 @@ class Soleniod extends Curve {
     	    if !(0 <= t <= 1) {
     	    	console.error("t value must between 0 and 1");
     	    }
-    	    
-    	    return optionalTarget.set(
-                this.radius*Math.sin(this.period*2*Math.pi*t,
-                t*this.length, 
-                this.radius*Math.cos(this.period*2*Math.pi*t)
+            
+            x = this.radius*Math.cos(2*Math.pi*this.period*t)
+    	    y = this.radius*Math.sin(2*Math.pi*this.period*t)
+            z = this.length*t
+            
+    	    return optionalTarget.set(x, y, z)
     }
 }
 
