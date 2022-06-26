@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { LineBasicMaterial } from "three";
 //import { TransformControls } from "three/examples/jsm/controls/TransformControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { SoleniodCurve } from "./Curve/SoleniodCurve.js";
+import { Soleniod } from "./Curve/Soleniod.js";
 
 // initialize
 const scene = new THREE.Scene();
@@ -26,13 +26,13 @@ const controls = new OrbitControls(camera, renderer.domElement);
 //const transform = new TransformControls(camera, renderer.domElement);
 
 // add geomatry
-const parametric = new SolenoidCurve(10,4,1);
+const seleniod = new Solenoid(10,4,1);
 
 // add material
 const red = new LineBasicMaterial({ color: "red"});
 
 // add mesh
-const curve = new THREE.Line(parametric.getPoints(100), red);
+const curve = new THREE.Line(soleniod.getPoints(100), red);
 
 // set control poperties
 controls.enableDamping = true;
