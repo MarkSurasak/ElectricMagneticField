@@ -1,4 +1,5 @@
-import { Curve, Vector3} from "three";
+import { Curve } from "three/extras/core/Curve.js";
+import { Vector3 } from "three/math/Vector3.js";
 
 class Soleniod extends Curve {
     
