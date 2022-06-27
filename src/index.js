@@ -1,8 +1,8 @@
 import * as THREE from "three";
-import { LineBasicMaterial } from "three";
+import { BufferGeometry, LineBasicMaterial, MeshPhongMaterial } from "three";
 //import { TransformControls } from "three/examples/jsm/controls/TransformControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { Soleniod } from "./Curve/Soleniod.js";
+import { Solenoid } from "./curve/Solenoid.js";
 
 // initialize
 const scene = new THREE.Scene();
@@ -25,21 +25,31 @@ const axis = new THREE.AxesHelper(5);
 const controls = new OrbitControls(camera, renderer.domElement);
 //const transform = new TransformControls(camera, renderer.domElement);
 
+//curves
+const solenoid = new Solenoid(10, 4, 1);
+
 // add geomatry
-const seleniod = new Solenoid(10,4,1);
+const tube = new THREE.TubeGeometry(solenoid, 200, 0.05, 5, false);
 
 // add material
-const red = new LineBasicMaterial({ color: "red"});
+const red = new MeshPhongMaterial({ color: "red" });
 
 // add mesh
-const curve = new THREE.Line(soleniod.getPoints(100), red);
+const curve = new THREE.Mesh(tube, red);
+
+//add lights
+const ambiant = new THREE.AmbientLight(0x404040);
+const light = new THREE.PointLight(0xff0000, 1, 100);
+light.position.set(5, 5, 5);
 
 // set control poperties
 controls.enableDamping = true;
 
 // add mesh to the scene
 scene.add(grid, axis);
-scene.add(line);
+scene.add(curve);
+scene.add(ambiant);
+scene.add(light);
 
 camera.position.set(5, 5, 5);
 controls.update();
