@@ -7,10 +7,10 @@ class Toriod extends Curve {
         super();
         
         this.period = period;
-        this.length = lenght;
+        this.length = length;
 
-        this.outerRadius = outerRedius;
-        this.innerRadius = innerRedius;
+        this.outerRadius = outerRadius;
+        this.innerRadius = innerRadius;
         
     }
     
@@ -19,9 +19,9 @@ class Toriod extends Curve {
     	    	console.error("t value must between 0 and 1");
     	    }
             
-            x = this.length*Math.cos(2*Math.pi*t)*(this.innerRadius*Math.cos(2*Math.pi*this.period*t))
-    	    y = this.length*Math.sin(2*Math.pi*t)*(this.innerRadius*Math.cos(2*Math.pi*this.period*t))
-            z = this.innerRadius*Math.sin(2*Math.pi*this.period*t)
+            x = this.length*Math.cos(2*Math.PI*t)*(this.innerRadius*Math.cos(2*Math.PI*this.period*t))
+    	    y = this.length*Math.sin(2*Math.PI*t)*(this.innerRadius*Math.cos(2*Math.PI*this.period*t))
+            z = this.innerRadius*Math.sin(2*Math.PI*this.period*t)
             
     	    return optionalTarget.set(x, y, z)
     }
