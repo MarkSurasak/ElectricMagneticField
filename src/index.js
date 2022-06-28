@@ -2,7 +2,7 @@ import * as THREE from "three";
 import { BufferGeometry, LineBasicMaterial, MeshPhongMaterial } from "three";
 //import { TransformControls } from "three/examples/jsm/controls/TransformControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { Solenoid } from "./curve/Solenoid.js";
+import { Toriod } from "./curve/Toriod";
 
 // initialize
 const scene = new THREE.Scene();
@@ -26,10 +26,10 @@ const controls = new OrbitControls(camera, renderer.domElement);
 //const transform = new TransformControls(camera, renderer.domElement);
 
 //curves
-const solenoid = new Solenoid(10, 4, 1);
+const toriod = new Toriod(50, Math.PI, 0.5, 3);
 
 // add geomatry
-const tube = new THREE.TubeGeometry(solenoid, 200, 0.05, 5, false);
+const tube = new THREE.TubeGeometry(toriod, 1000, 0.05, 10, false);
 
 // add material
 const red = new MeshPhongMaterial({ color: "red" });
