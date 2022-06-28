@@ -4,6 +4,8 @@ import { BufferGeometry, LineBasicMaterial, MeshPhongMaterial } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Toriod } from "./curve/Toriod";
 
+import { Arrow } from "./object/Arrow";
+
 // initialize
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -36,6 +38,7 @@ const red = new MeshPhongMaterial({ color: "red" });
 
 // add mesh
 const curve = new THREE.Mesh(tube, red);
+const arrow = new Arrow();
 
 //add lights
 const ambiant = new THREE.AmbientLight(0x404040);
@@ -47,9 +50,10 @@ controls.enableDamping = true;
 
 // add mesh to the scene
 scene.add(grid, axis);
-scene.add(curve);
+//scene.add(curve);
 scene.add(ambiant);
 scene.add(light);
+scene.add(arrow);
 
 camera.position.set(5, 5, 5);
 controls.update();
