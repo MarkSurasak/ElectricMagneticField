@@ -55,10 +55,18 @@ scene.add(grid, axis);
 scene.add(curve);
 scene.add(ambiant);
 scene.add(light);
-scene.add(vectorField.generateVectorField())
+scene.add(vectorField.generateVectorField());
 
 camera.position.set(5, 5, 5);
 controls.update();
+
+window.addEventListener("resize", onResize);
+
+function onResize() {
+	renderer.setSize(window.innerWidth, window.innerHeight);
+	camera.aspect = window.innerWidth / window.innerHeight;
+	camera.updateProjectionMatrix();
+}
 
 function animate() {
 	requestAnimationFrame(animate);
