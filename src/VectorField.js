@@ -1,12 +1,15 @@
-import { ArrowHelper, Box3, Group, Vector3, Matrix3 } from "three";
+import { ArrowHelper, Box3, Group, Vector3, Matrix3, Color } from "three";
 
 class VectorField extends Group {
-	getVector(position, optionalTaget = new Vector3(0, 1, 0)) {
-		return optionalTaget.multiplyScalar(-1);
+	getVector(position, optionalTaget = new Vector3(1, 0, 0)) {
+		return optionalTaget;
 	}
 
 	generateVectorField(
-		box = new Box3(new Vector3(-5, -5, -5), new Vector3(5, 5, 5))
+		box = new Box3(new Vector3(-5, -5, -5), new Vector3(5, 5, 5)),
+		maxColor = new Color("rgb(0,0,255)"),
+		minColor = new Color("rgb(255,0,0)"),
+		scale = 1
 	) {
 		const startX = Math.min(box.min.x, box.max.x);
 		const startY = Math.min(box.min.y, box.max.y);
@@ -21,10 +24,15 @@ class VectorField extends Group {
 				for (let z = startZ; z <= endZ; z++) {
 					const position = new Vector3(x, y, z);
 					const direction = this.getVector(position);
+
+					const color = new Color();
+					color.lerpColors(minColor, maxColor, direction.length());
+
 					const arrow = new ArrowHelper(
 						direction.normalize(),
 						position,
-						1
+						1,
+						color
 					);
 
 					this.add(arrow);
