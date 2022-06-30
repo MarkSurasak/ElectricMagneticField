@@ -7,9 +7,10 @@ class VectorField extends Group {
 
   generateVectorField(
     box = new Box3(new Vector3(-5, -5, -5), new Vector3(5, 5, 5)),
-    maxColor = new Color("rgb(0,0,255)"),
-    minColor = new Color("rgb(255,0,0)"),
-    scale = 1
+    minColor = new Color("rgb(0,0,255)"),
+    maxColor = new Color("rgb(255,0,0)"),
+    minMagnitude = 0,
+    maxMagnitude = 5
   ) {
     const startX = Math.min(box.min.x, box.max.x);
     const startY = Math.min(box.min.y, box.max.y);
@@ -25,10 +26,18 @@ class VectorField extends Group {
           const position = new Vector3(x, y, z);
           const direction = this.getVector(position);
 
-          // const color = new Color();
-          // color.lerpColors(minColor, maxColor, direction.length());
+          const t =
+            (direction.length() - minMagnitude) / (maxMagnitude - minMagnitude);
 
-          const arrow = new ArrowHelper(direction.normalize(), position, 1);
+          const color = new Color();
+          color.lerpColors(minColor, maxColor, t);
+
+          const arrow = new ArrowHelper(
+            direction.normalize(),
+            position,
+            1,
+            color
+          );
 
           this.add(arrow);
         }

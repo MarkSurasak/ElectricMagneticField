@@ -3,6 +3,7 @@ import { MeshPhongMaterial } from "three";
 //import { TransformControls } from "three/examples/jsm/controls/TransformControls";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Toriod } from "./curve/Toriod";
+import { Solenoid } from "./curve/Solenoid";
 
 import { MagneticField } from "./MagneticField";
 
@@ -29,12 +30,13 @@ const controls = new OrbitControls(camera, renderer.domElement);
 
 //curves
 const toriod = new Toriod(70, Math.PI * 1.9, 0.5, 3);
+const soleniod = new Solenoid(10, 3, 3);
 
 // add something
-const vectorField = new MagneticField(toriod);
+const vectorField = new MagneticField(soleniod);
 
 // add geomatry
-const tube = new THREE.TubeGeometry(toriod, 1000, 0.05, 10, false);
+const tube = new THREE.TubeGeometry(soleniod, 1000, 0.05, 10, false);
 
 // add material
 const red = new MeshPhongMaterial({ color: "red" });
