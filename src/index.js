@@ -4,6 +4,8 @@ import { MeshPhongMaterial } from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { Toriod } from "./curve/Toriod";
 import { Solenoid } from "./curve/Solenoid";
+import { GUI } from "dat.gui";
+import Stats from "three/examples/jsm/libs/stats.module";
 
 import { MagneticField } from "./MagneticField";
 
@@ -62,6 +64,12 @@ scene.add(vectorField.generateVectorField());
 camera.position.set(5, 5, 5);
 
 window.addEventListener("resize", onResize);
+
+const stats = Stats();
+document.body.appendChild(stats.dom);
+
+//add gui
+const gui = new GUI();
 
 function onResize() {
   renderer.setSize(window.innerWidth, window.innerHeight);
