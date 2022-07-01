@@ -10,7 +10,7 @@ class VectorField extends Group {
     minColor = new Color("rgb(0,0,255)"),
     maxColor = new Color("rgb(255,0,0)"),
     minMagnitude = 0,
-    maxMagnitude = 5
+    maxMagnitude = 0.01
   ) {
     const startX = Math.min(box.min.x, box.max.x);
     const startY = Math.min(box.min.y, box.max.y);
@@ -36,7 +36,9 @@ class VectorField extends Group {
             direction.normalize(),
             position,
             1,
-            color
+            color,
+            0.2,
+            0.05
           );
 
           this.add(arrow);

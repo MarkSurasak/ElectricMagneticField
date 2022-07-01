@@ -33,13 +33,13 @@ const toriod = new Toriod(70, Math.PI * 1.9, 0.5, 3);
 const soleniod = new Solenoid(10, 3, 3);
 
 // add something
-const vectorField = new MagneticField(soleniod);
+const vectorField = new MagneticField(toriod);
 
 // add geomatry
-const tube = new THREE.TubeGeometry(soleniod, 1000, 0.05, 10, false);
+const tube = new THREE.TubeGeometry(toriod, 1000, 0.05, 10, false);
 
 // add material
-const red = new MeshPhongMaterial({ color: "red" });
+const red = new MeshPhongMaterial({ color: "orange" });
 
 // add mesh
 const curve = new THREE.Mesh(tube, red);
@@ -53,7 +53,7 @@ light.position.set(5, 5, 5);
 controls.enableDamping = true;
 
 // add mesh to the scene
-scene.add(grid, axis);
+scene.add(grid);
 scene.add(curve);
 scene.add(ambiant);
 scene.add(light);

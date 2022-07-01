@@ -2,7 +2,7 @@ import { Vector3 } from "three";
 import { VectorField } from "./VectorField";
 
 class MagneticField extends VectorField {
-  constructor(parametric, cerrent, precision = 100) {
+  constructor(parametric, cerrent, precision = 5000) {
     super();
 
     this.parametric = parametric;
@@ -18,7 +18,7 @@ class MagneticField extends VectorField {
       const tangent = this.parametric.getTangent(t);
       const direction = new Vector3();
 
-      direction.subVectors(point, position);
+      direction.subVectors(position, point);
 
       const distance = direction.lengthSq();
 
@@ -26,6 +26,8 @@ class MagneticField extends VectorField {
 
       optionalTarget.add(tangent.cross(direction).divideScalar(distance));
     }
+
+    optionalTarget.multiplyScalar(delta);
 
     return optionalTarget;
   }
