@@ -2,7 +2,7 @@ import { Vector3 } from "three";
 import { VectorField } from "./VectorField";
 
 class MagneticField extends VectorField {
-  constructor(parametric, cerrent, precision = 5000) {
+  constructor(parametric, cerrent, precision = 100) {
     super();
 
     this.parametric = parametric;
