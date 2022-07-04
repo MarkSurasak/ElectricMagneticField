@@ -2,8 +2,6 @@ import * as THREE from "three";
 import { GUI } from "dat.gui";
 import Stats from "three/examples/jsm/libs/stats.module";
 
-import { MagneticField } from "./MagneticField";
-
 // initialize
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
@@ -29,10 +27,15 @@ var setting = {
   }
 }
 
+const copper_material = new THREE.MeshPhongMaterial({color: 'orange'})
+
+const soleniod = new Curve.Soleniod(10,4,2)
+const toriod = new Curve.Toriod(70, Math.PI*2, 0.5, 3)
+
 const grid = new THREE.GridHelper(10,10)
 const axis = new THREE.AxesHelper()
 
-const tube = new THREE.Mesh()
+const tube = new THREE.Mesh(new THREE.TubeGeometry(solenoid, 1000, 0.05, 10, false), copper_material)
 
 function initGUI() {
   const stats = Stats();
@@ -59,30 +62,35 @@ function initGUI() {
     .name('Curve type')
     .onChange((values) => {
       switch (values) {
-        case 'soleniod': break;
-        case 'toriod': break;
+        case 'soleniod': 
+          tube.geometry = new THREE.TubeGeometry(soleniod, 500, 0.05, 10, false)
+          break;
+        case 'toriod': 
+          tube.geometry = new THREE.TubeGeometry(toriod, 1000, 0.05, 10, false)
+          break;
       }
     })
 }
 
 function initialScene() {
   // add controler
-  const controls = new OrbitControls(camera, renderer.domElement);
+  const controls = new OrbitControls(camera, renderer.domElement)
   
   //add lights
-  const ambiant = new THREE.AmbientLight(0x404040);
-  const light = new THREE.PointLight(0xff0000, 1, 100);
-  light.position.set(5, 5, 5);
+  const ambiant = new THREE.AmbientLight(0x404040)
+  const light = new THREE.PointLight(0xff0000, 1, 100)
+  light.position.set(5, 5, 5)
 
   // set control poperties
-  controls.enableDamping = true;
+  controls.enableDamping = true
 
   // add mesh to the scene
-  scene.add(ambiant);
-  scene.add(light);
+  scene.add(tube)
+  scene.add(ambiant)
+  scene.add(light)
 
-  initialGUI();
-  window.addEventListener("resize", onResize);
+  initialGUI()
+  window.addEventListener("resize", onResize)
 }
 
 function animate() {
