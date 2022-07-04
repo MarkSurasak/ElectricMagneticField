@@ -1,9 +1,4 @@
 import * as THREE from "three";
-import { MeshPhongMaterial, TubeGeometry } from "three";
-//import { TransformControls } from "three/examples/jsm/controls/TransformControls";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { Toriod } from "./curve/Toriod";
-import { Solenoid } from "./curve/Solenoid";
 import { GUI } from "dat.gui";
 import Stats from "three/examples/jsm/libs/stats.module";
 
@@ -24,12 +19,14 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 var setting = {
-  grid_enable: true
+  helper: {
+    enable_grid: true
+    enable_axis: false
+  }
 }
 
-var object = {
-  grid: new GridHelper(10,10)
-}
+const grid = new THREE.GridHelper(10,10)
+const axis = new THREE.AxesHelper()
 
 function initGUI() {
   const stats = Stats();
@@ -38,19 +35,25 @@ function initGUI() {
   //add gui
   const gui = new GUI();
   gui
-    .add(setting.grid, "enable")
-    .name("grid enable")
+    .add(setting.helper, "enable_grid")
+    .name("enable grid")
     .onChange((value) => {
-      if ( value ) {scene.add(object.grid)}
-      else {scene.remove(object.grid)}
+      if ( value ) { scene.add(grid) }
+      else { scene.remove(grid) }
+    });
+  gui
+    .add(setting.helper, "enable_axis")
+    .name("enable axis")
+    .onChange((value) => {
+      if ( value ) { scene.add(axis) }
+      else { scene.remove(axis) }
     });
 }
 
 function initialScene() {
   // add controler
   const controls = new OrbitControls(camera, renderer.domElement);
-  //const transform = new TransformControls(camera, renderer.domElement);
-
+  
   //add lights
   const ambiant = new THREE.AmbientLight(0x404040);
   const light = new THREE.PointLight(0xff0000, 1, 100);
