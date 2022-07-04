@@ -20,13 +20,19 @@ document.body.appendChild(renderer.domElement);
 
 var setting = {
   helper: {
-    enable_grid: true
+    enable_grid: true,
     enable_axis: false
+  },
+  curve: {
+    type: 'soleniod',
+    radius: 0.1
   }
 }
 
 const grid = new THREE.GridHelper(10,10)
 const axis = new THREE.AxesHelper()
+
+const tube = new THREE.Mesh()
 
 function initGUI() {
   const stats = Stats();
@@ -48,6 +54,15 @@ function initGUI() {
       if ( value ) { scene.add(axis) }
       else { scene.remove(axis) }
     });
+  gui
+    .add(setting.curve, 'type', ['soleniod','toriod'])
+    .name('Curve type')
+    .onChange((values) => {
+      switch (values) {
+        case 'soleniod': break;
+        case 'toriod': break;
+      }
+    })
 }
 
 function initialScene() {
