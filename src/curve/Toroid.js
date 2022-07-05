@@ -1,6 +1,6 @@
 import { Curve, Vector3 } from "three";
 
-class Toriod extends Curve {
+class Toroid extends Curve {
   constructor(period, length, innerRadius, outerRadius) {
     super();
 
@@ -30,4 +30,4 @@ class Toriod extends Curve {
   }
 }
 
-export { Toriod };
+export { Toroid };
