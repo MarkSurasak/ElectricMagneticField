@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { GUI } from "dat.gui";
 import Stats from "three/examples/jsm/libs/stats.module";
+import * as Curve from "./curve"
 
 // initialize
 const scene = new THREE.Scene();
