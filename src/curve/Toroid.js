@@ -1,8 +1,11 @@
-import { Curve, Vector3 } from "three";
+import { ParametricCurve } from "./ParametricCurve.js";
+import { Vector3 } from "three";
 
-class Toroid extends Curve {
+class Toroid extends ParametricCurve {
   constructor(period, length, innerRadius, outerRadius) {
     super();
+
+    this.type = "parametric";
 
     this.period = period;
     this.length = length;

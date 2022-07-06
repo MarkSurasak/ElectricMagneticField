@@ -56,6 +56,8 @@ const gui = new GUI();
 const solenoid_setting = gui.addFolder("Solenoid");
 const toroid_setting = gui.addFolder("Toroid");
 
+const magneticField = new MagneticField();
+
 initialScene();
 
 function initialGUI() {
@@ -80,7 +82,6 @@ function initialGUI() {
   toroid_setting.add(toroid, "period", 0, 100).onChange(updateScene);
   toroid_setting.add(toroid, "innerRadius", 0, 5).onChange(updateScene);
   toroid_setting.add(toroid, "outerRadius", 0, 5).onChange(updateScene);
-
 }
 
 function initialScene() {
@@ -96,6 +97,7 @@ function initialScene() {
   scene.add(tube);
   scene.add(ambiant);
   scene.add(light);
+  scene.add(magneticField.generateVectorField());
 
   initialGUI();
   window.addEventListener("resize", onResize);

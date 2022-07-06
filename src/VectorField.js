@@ -35,7 +35,7 @@ class VectorField extends Group {
           const arrow = new ArrowHelper(
             direction.normalize(),
             position,
-            1,
+            0.8,
             color,
             0.2,
             0.05
