@@ -7,11 +7,12 @@ import { Toroid } from "./curve/Toroid.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import { MagneticField } from "./MagneticField.js";
+import { Vector3 } from "three";
 
 // initialize
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(
-  60,
+  75,
   window.innerWidth / window.innerHeight,
   0.1,
   1000
@@ -34,7 +35,10 @@ var setting = {
   },
   curve: {
     type: "soleniod",
-    radius: 0.1
+    tubularSegments: 1000,
+    radius: 0.1,
+    radialSegments: 8,
+    close: false
   }
 };
 
@@ -47,7 +51,13 @@ const grid = new THREE.GridHelper(10, 10);
 const axis = new THREE.AxesHelper(5);
 
 const tube = new THREE.Mesh(
-  new THREE.TubeGeometry(solenoid, 1000, 0.05, 10, false),
+  new THREE.TubeGeometry(
+    solenoid,
+    setting.curve.tubularSegments,
+    setting.curve.radius,
+    setting.curve.radialSegments,
+    setting.curve.close
+  ),
   copper_material
 );
 
@@ -97,7 +107,7 @@ function initialScene() {
   scene.add(tube);
   scene.add(ambiant);
   scene.add(light);
-  scene.add(magneticField.generateVectorField());
+  scene.add(magneticField);
 
   initialGUI();
   window.addEventListener("resize", onResize);
@@ -134,16 +144,22 @@ function updateScene() {
   switch (setting.curve.type) {
     case "soleniod":
       tube.geometry = new THREE.TubeGeometry(solenoid, 500, 0.05, 10, false);
+      magneticField.parametric = solenoid;
       solenoid_setting.show();
       solenoid_setting.open();
       break;
     case "toriod":
       tube.geometry = new THREE.TubeGeometry(toroid, 1000, 0.05, 10, false);
+      magneticField.parametric = toroid;
       toroid_setting.show();
       toroid_setting.open();
       break;
     default:
   }
+
+  console.log(magneticField.parametric);
+
+  magneticField.updateVectorField();
 }
 
 function onResize() {

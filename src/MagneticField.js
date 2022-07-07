@@ -7,7 +7,7 @@ class MagneticField extends VectorField {
   constructor(
     parametric = new Solenoid(10, 4, 2),
     cerrent = 1,
-    precision = 38
+    precision = 50
   ) {
     super();
 
@@ -17,15 +17,7 @@ class MagneticField extends VectorField {
 
     this.delta = 1 / this.precision;
 
-    this.updateSample();
-  }
-
-  updateSample() {
-    this.samplePoints = this.parametric.getPoints(this.precision - 1);
-    this.sampleTangents = this.parametric.getTangents(this.precision - 1);
-
-    console.log(this.samplePoints);
-    console.log(this.sampleTangents);
+    this.generateVectorField();
   }
 
   getVector(position, optionalTarget = new Vector3(0, 0, 0)) {
