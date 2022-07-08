@@ -2,7 +2,7 @@ import { ArrowHelper, Box3, Group, Vector3, Matrix3, Color } from "three";
 
 class VectorField extends Group {
   constructor(
-    box = new Box3(new Vector3(0, 0, 0), new Vector3(1, 1, 1)),
+    box = new Box3(new Vector3(-5, -5, -5), new Vector3(5, 5, 5)),
     minColor = new Color("rgb(0,0,255)"),
     maxColor = new Color("rgb(255,0,0)"),
     minMagnitude = 0,
@@ -22,11 +22,11 @@ class VectorField extends Group {
   }
 
   updateVectorField() {
-    console.log(this.getVector(new Vector3(0, 0, 0)));
-    this.children.forEach((child) => {
-      const arrow = this.getArrowAt(child.position);
-      child = arrow;
+    const new_arrow = this.children.map((child) => {
+      return this.getArrowAt(child.position);
     });
+
+    this.children = new_arrow;
   }
 
   getArrowAt(position) {

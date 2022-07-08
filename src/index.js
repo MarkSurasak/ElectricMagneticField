@@ -83,15 +83,36 @@ function initialGUI() {
   gui
     .add(setting.curve, "type", ["soleniod", "toriod"])
     .name("Curve type")
-    .onChange(updateScene);
+    .onChange(() => {
+      updateScene();
+      magneticField.updateVectorField();
+    });
 
-  solenoid_setting.add(solenoid, "period", 0, 50).onChange(updateScene);
-  solenoid_setting.add(solenoid, "length", 0, 5).onChange(updateScene);
-  solenoid_setting.add(solenoid, "radius", 0, 5).onChange(updateScene);
+  solenoid_setting.add(solenoid, "period", 0, 50).onChange(() => {
+    updateScene();
+    magneticField.updateVectorField();
+  });
+  solenoid_setting.add(solenoid, "length", 0, 5).onChange(() => {
+    updateScene();
+    magneticField.updateVectorField();
+  });
+  solenoid_setting.add(solenoid, "radius", 0, 5).onChange(() => {
+    updateScene();
+    magneticField.updateVectorField();
+  });
 
-  toroid_setting.add(toroid, "period", 0, 100).onChange(updateScene);
-  toroid_setting.add(toroid, "innerRadius", 0, 5).onChange(updateScene);
-  toroid_setting.add(toroid, "outerRadius", 0, 5).onChange(updateScene);
+  toroid_setting.add(toroid, "period", 0, 100).onChange(() => {
+    updateScene();
+    magneticField.updateVectorField();
+  });
+  toroid_setting.add(toroid, "innerRadius", 0, 5).onChange(() => {
+    updateScene();
+    magneticField.updateVectorField();
+  });
+  toroid_setting.add(toroid, "outerRadius", 0, 5).onChange(() => {
+    updateScene();
+    magneticField.updateVectorField();
+  });
 }
 
 function initialScene() {
@@ -156,10 +177,6 @@ function updateScene() {
       break;
     default:
   }
-
-  console.log(magneticField.parametric);
-
-  magneticField.updateVectorField();
 }
 
 function onResize() {

@@ -7,7 +7,7 @@ class MagneticField extends VectorField {
   constructor(
     parametric = new Solenoid(10, 4, 2),
     cerrent = 1,
-    precision = 50
+    precision = 500
   ) {
     super();
 
