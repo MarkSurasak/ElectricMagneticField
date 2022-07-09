@@ -2,7 +2,8 @@ import { ParametricCurve } from "./ParametricCurve.js";
 import { Vector3 } from "three";
 
 class Solenoid extends ParametricCurve {
-  constructor(period, length, radius) {
+
+  constructor(period = 10, length = 4, radius = 2) {
     super();
 
     this.type = "parametric";
