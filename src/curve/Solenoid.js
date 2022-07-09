@@ -25,7 +25,7 @@ class Solenoid extends ParametricCurve {
     return optionalTarget.set(x, y, z);
   }
 
-  getTangent(t, optionalTarget = new Vector3()) {
+  getDevivative(t, optionalTarget = new Vector3()) {
     const x =
       this.radius *
       Math.cos(2 * Math.PI * this.period * t) *
@@ -40,7 +40,7 @@ class Solenoid extends ParametricCurve {
       Math.PI *
       this.period;
 
-    return optionalTarget.set(x, y, z).normalize();
+    return optionalTarget.set(x, y, z);
   }
 
   onChange(func) {
