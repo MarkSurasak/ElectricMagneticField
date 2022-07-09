@@ -48,9 +48,9 @@ class Solenoid extends ParametricCurve {
   }
 
   addController (folder) {
-    folder.add(this, 'period', 0, 50, 1).onChange((value) => {this.onChange('period', value)})
-    folder.add(this, 'length', 0, 5, 0.1).onChange((value) => {this.onChange('length', value)})
-    folder.add(this, 'radius', 0, 5, 0.1).onChange((value) => {this.onChange('radius', value)})
+    folder.add(this, 'period', 0, 50, 1).onChangeFinish((value) => {this.onChange('period', value)})
+    folder.add(this, 'length', 0, 5, 0.1).onChangeFinish((value) => {this.onChange('length', value)})
+    folder.add(this, 'radius', 0, 5, 0.1).onChangeFinish((value) => {this.onChange('radius', value)})
     
     return this
   }
