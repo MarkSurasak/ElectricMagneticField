@@ -53,6 +53,7 @@ class VectorField extends Group {
         }
       }
     }
+    this.updateVectorField()
   }
 
   jacobianMatrix(position, optionalTaget = new Matrix3()) {
