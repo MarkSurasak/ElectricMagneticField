@@ -44,15 +44,16 @@ var setting = {
 
 const copper_material = new THREE.MeshPhongMaterial({ color: "orange" });
 
-const solenoid = new Solenoid(10, 4, 2);
-const toroid = new Toroid(70, Math.PI * 2, 0.5, 3);
+const curves = {solenoid: new Solenoid(),
+                toroid: new Toroid(),
+}
 
 const grid = new THREE.GridHelper(10, 10);
 const axis = new THREE.AxesHelper(5);
 
 const tube = new THREE.Mesh(
   new THREE.TubeGeometry(
-    solenoid,
+    curves[setting.curve.type],
     setting.curve.tubularSegments,
     setting.curve.radius,
     setting.curve.radialSegments,
@@ -66,7 +67,7 @@ const gui = new GUI();
 const solenoid_setting = gui.addFolder("Solenoid");
 const toroid_setting = gui.addFolder("Toroid");
 
-const magneticField = new MagneticField();
+const magneticField = new MagneticField(curves[setting.curve.type]);
 
 initialScene();
 
@@ -75,44 +76,11 @@ function initialGUI() {
   gui
     .add(setting.helper, "enable_grid")
     .name("enable grid")
-    .onChange(updateScene);
+    .onChange((isEnable) => { isEnable ? scene.add(axis) : scene.remove(axis)});
   gui
     .add(setting.helper, "enable_axis")
     .name("enable axis")
-    .onChange(updateScene);
-  gui
-    .add(setting.curve, "type", ["soleniod", "toriod"])
-    .name("Curve type")
-    .onChange(() => {
-      updateScene();
-      magneticField.updateVectorField();
-    });
-
-  solenoid_setting.add(solenoid, "period", 0, 50).onChange(() => {
-    updateScene();
-    magneticField.updateVectorField();
-  });
-  solenoid_setting.add(solenoid, "length", 0, 5).onChange(() => {
-    updateScene();
-    magneticField.updateVectorField();
-  });
-  solenoid_setting.add(solenoid, "radius", 0, 5).onChange(() => {
-    updateScene();
-    magneticField.updateVectorField();
-  });
-
-  toroid_setting.add(toroid, "period", 0, 100).onChange(() => {
-    updateScene();
-    magneticField.updateVectorField();
-  });
-  toroid_setting.add(toroid, "innerRadius", 0, 5).onChange(() => {
-    updateScene();
-    magneticField.updateVectorField();
-  });
-  toroid_setting.add(toroid, "outerRadius", 0, 5).onChange(() => {
-    updateScene();
-    magneticField.updateVectorField();
-  });
+    .onChange((isEnable) => { isEnable ? scene.add(grid) : scene.remove(grid)});
 }
 
 function initialScene() {
@@ -144,39 +112,6 @@ function animate() {
 
   stats.update();
   renderer.render(scene, camera);
-}
-
-function updateScene() {
-  if (setting.helper.enable_grid) {
-    scene.add(grid);
-  } else {
-    scene.remove(grid);
-  }
-
-  if (setting.helper.enable_axis) {
-    scene.add(axis);
-  } else {
-    scene.remove(axis);
-  }
-
-  toroid_setting.hide();
-  solenoid_setting.hide();
-
-  switch (setting.curve.type) {
-    case "soleniod":
-      tube.geometry = new THREE.TubeGeometry(solenoid, 500, 0.05, 10, false);
-      magneticField.parametric = solenoid;
-      solenoid_setting.show();
-      solenoid_setting.open();
-      break;
-    case "toriod":
-      tube.geometry = new THREE.TubeGeometry(toroid, 1000, 0.05, 10, false);
-      magneticField.parametric = toroid;
-      toroid_setting.show();
-      toroid_setting.open();
-      break;
-    default:
-  }
 }
 
 function onResize() {
