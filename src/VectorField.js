@@ -3,53 +3,20 @@ import { ArrowHelper, Box3, Group, Vector3, Matrix3, Color } from "three";
 class VectorField extends Group {
   constructor(
     box = new Box3(new Vector3(-5, -5, -5), new Vector3(5, 5, 5)),
-    minColor = new Color("rgb(0,0,255)"),
-    maxColor = new Color("rgb(255,0,0)"),
-    minMagnitude = 0,
-    maxMagnitude = 0.01
+    minLength = 0,
+    maxLength = 1
   ) {
     super();
 
-    this.box = box;
-    this.minColor = minColor;
-    this.maxColor = maxColor;
-    this.minMagnitude = minMagnitude;
-    this.maxMagnitude = maxMagnitude;
+    this.getBorder(box)
+
+    this.minLength = minLength;
+    this.maxLength = maxLength;
   }
 
-  getVector(position, optionalTaget = new Vector3(1, 0, 0)) {
-    return optionalTaget;
-  }
+  setBorder(box) {
+    this.box = box
 
-  updateVectorField() {
-    const new_arrow = this.children.map((child) => {
-      return this.getArrowAt(child.position);
-    });
-
-    this.children = new_arrow;
-  }
-
-  getArrowAt(position) {
-    const direction = this.getVector(position);
-
-    const t =
-      (direction.length() - this.minMagnitude) /
-      (this.maxMagnitude - this.minMagnitude);
-
-    const color = new Color();
-    color.lerpColors(this.minColor, this.maxColor, t);
-
-    return new ArrowHelper(
-      direction.normalize(),
-      position,
-      0.8,
-      color,
-      0.2,
-      0.05
-    );
-  }
-
-  generateVectorField() {
     const startX = Math.round(Math.min(this.box.min.x, this.box.max.x));
     const startY = Math.round(Math.min(this.box.min.y, this.box.max.y));
     const startZ = Math.round(Math.min(this.box.min.z, this.box.max.z));
@@ -58,10 +25,31 @@ class VectorField extends Group {
     const endY = Math.round(Math.max(this.box.min.y, this.box.max.y));
     const endZ = Math.round(Math.max(this.box.min.z, this.box.max.z));
 
-    for (let x = startX; x <= endX; x++) {
-      for (let y = startY; y <= endY; y++) {
-        for (let z = startZ; z <= endZ; z++) {
-          this.add(this.getArrowAt(new Vector3(x, y, z)));
+    this.start = new Vector(startX, startY, startZ)
+    this.end = new Vector(endX, endY, endZ)
+}
+
+  getVector(position, optionalTaget = new Vector3(1, 0, 0)) {
+    return optionalTaget;
+  }
+
+  updateVectorField() {
+    for (let child in this.childen) {
+      const vector = this.getVector(child.position)
+      const length = vector.length()
+
+      const t = (length - this.minLength)/(this.maxLength - this.minLength)
+
+      child.setColor(`hsl(${t}, 1, 1)`)
+      child.setDirection(vector.normalize())
+    }
+  }
+
+  generateVectorField() {
+    for (let x = this.start.x; x < this.end.x; x++) {
+      for (let y = this.start.y; y < this.end.y; y++) {
+        for (let z = this.start.z; z < this.end.z; z++) {
+          this.add(new ArrowHelper (origin = new Vector3(x,y,z)));
         }
       }
     }
