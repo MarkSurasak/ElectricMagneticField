@@ -31,6 +31,20 @@ class Toroid extends ParametricCurve {
 
     return optionalTarget.set(x, y, z);
   }
+
+  onChange(func) {
+    this.__onChange = func
+  }
+
+  addController (folder) {
+    folder.add(this, 'period', 0, 50, 1).onChange((value) => {this.onChange('period', value)})
+    folder.add(this, 'length', 0, 5, 0.1).onChange((value) => {this.onChange('length', value)})
+    folder.add(this, 'innerRadius', 0, 5, 0.1).onChange((value) => {this.onChange('innerRadius', value)})
+    folder.add(this, 'outerRadius', 0, 1, 0.05).onChange((value) => {this.onChange('outerRadius', value)})
+
+    return this
+  }
+
 }
 
 export { Toroid };
