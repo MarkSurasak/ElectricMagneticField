@@ -64,12 +64,42 @@ const tube = new THREE.Mesh(
 
 const gui = new GUI();
 
-const solenoid_setting = gui.addFolder("Solenoid");
-const toroid_setting = gui.addFolder("Toroid");
+const curves_menu = {solenoid: gui.addFolder("Solenoid"),
+                        toroid: gui.addFolder("Toroid")
+}
 
 const magneticField = new MagneticField(curves[setting.curve.type]);
 
 initialScene();
+
+function handledPropertyChange() {
+  megeticField.updateVectorField()
+  updateTubeGeometry()
+}
+
+function handledCurveChange (type) {
+  magneticField.parametric = curves[type]
+  
+  for (const type in curves_setting) {
+    curves_menu[type].hide()
+  }
+  
+  curves_menu[type].show()
+  curves_menu[type].open()
+
+  megeticField.updateVectorField()
+  updateTubeGeometry()
+}
+
+function updateTubeGeometry() {
+  tube.geometry = new THREE.TubeGeometry(
+    curves[setting.curve.type],
+    setting.curve.tubularSegments,
+    setting.curve.radius,
+    setting.curve.radialSegments,
+    setting.curve.close
+  )
+}
 
 function initialGUI() {
   //add gui
@@ -81,6 +111,12 @@ function initialGUI() {
     .add(setting.helper, "enable_axis")
     .name("enable axis")
     .onChange((isEnable) => { isEnable ? scene.add(grid) : scene.remove(grid)});
+
+  gui.add(setting.curve, 'type', ['solenoid','toroid']).name('curve type').onChange(handleCurveChange)
+
+  for (const type in curves) {
+    curve[type].addController(curves_menu[type]).onChange(handledPropertyChange)
+  }
 }
 
 function initialScene() {
