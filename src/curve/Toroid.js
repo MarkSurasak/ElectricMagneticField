@@ -2,7 +2,7 @@ import { ParametricCurve } from "./ParametricCurve.js";
 import { Vector3 } from "three";
 
 class Toroid extends ParametricCurve {
-  constructor(period, length, innerRadius, outerRadius) {
+  constructor(period = 70, length = 2*Math.PI, 0.5, 2) {
     super();
 
     this.type = "parametric";
