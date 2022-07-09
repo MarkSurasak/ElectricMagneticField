@@ -23,14 +23,12 @@ class MagneticField extends VectorField {
   getVector(position, optionalTarget = new Vector3(0, 0, 0)) {
     const func = (t) => {
       const point = this.parametric.getPoint(t);
-      const tangent = this.parametric.getTangent(t);
+      const tangent = this.parametric.getderivative(t);
       const direction = new Vector3();
 
       direction.subVectors(position, point);
 
-      const distance = direction.lengthSq();
-
-      direction.normalize();
+      const distance = Math.power(direction.length(),3);
 
       return tangent.cross(direction).divideScalar(distance);
     };
