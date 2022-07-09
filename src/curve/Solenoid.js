@@ -18,10 +18,6 @@ class Solenoid extends ParametricCurve {
       console.error("t value must between 0 and 1");
     }
 
-    // let x = this.radius * Math.cos(2 * Math.PI * this.period * t);
-    // let y = this.radius * Math.sin(2 * Math.PI * this.period * t);
-    // let z = this.length * t;
-
     const x = this.radius * Math.sin(2 * Math.PI * this.period * t);
     const y = this.length * t;
     const z = this.radius * Math.cos(2 * Math.PI * this.period * t);
@@ -45,6 +41,18 @@ class Solenoid extends ParametricCurve {
       this.period;
 
     return optionalTarget.set(x, y, z).normalize();
+  }
+
+  onChange(func) {
+    this.__onChange = func
+  }
+
+  addController (folder) {
+    folder.add(this, 'period', 0, 50, 1).onChange((value) => {this.onChange('period', value)})
+    folder.add(this, 'length', 0, 5, 0.1).onChange((value) => {this.onChange('length', value)})
+    folder.add(this, 'radius', 0, 5, 0.1).onChange((value) => {this.onChange('radius', value)})
+    
+    return this
   }
 }
 
