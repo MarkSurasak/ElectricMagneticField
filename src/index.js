@@ -29,10 +29,6 @@ const stats = Stats();
 document.body.appendChild(stats.dom);
 
 var setting = {
-  helper: {
-    enable_grid: true,
-    enable_axis: false
-  },
   curve: {
     type: "soleniod",
     tubularSegments: 1000,
@@ -104,19 +100,18 @@ function updateTubeGeometry() {
 function initialGUI() {
   //add gui
   gui
-    .add(setting.helper, "enable_grid")
-    .name("enable grid")
-    .onChange((isEnable) => { isEnable ? scene.add(axis) : scene.remove(axis)});
+    .add(grid, "visible")
+    .name("grid visible")
   gui
-    .add(setting.helper, "enable_axis")
-    .name("enable axis")
-    .onChange((isEnable) => { isEnable ? scene.add(grid) : scene.remove(grid)});
-
+    .add(axis, "visible")
+    .name("axis visible")
+  
   gui.add(setting.curve, 'type', ['solenoid','toroid']).name('curve type').onChange(handleCurveChange)
 
-  for (const type in curves) {
-    curve[type].addController(curves_menu[type]).onChange(handledPropertyChange)
-  }
+  curves['solenoid'].addController(curves_menu['solenoid']).onChange(handlePropertyChange)
+  curves['toroid'].addController(curves_menu['toroid']).onChange(handlePropertyChange)
+  
+  curves_menu['toroid'].hide()
 }
 
 function initialScene() {
