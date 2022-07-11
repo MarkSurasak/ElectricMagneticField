@@ -1,27 +1,59 @@
-import { Curve } from "three/extras/core/Curve.js";
-import { Vector3 } from "three/math/Vector3.js";
+import { ParametricCurve } from "./ParametricCurve.js";
+import { Vector3 } from "three";
 
-class Soleniod extends Curve {
-    
-    constructer(period, length, radius) {
-        super();
-        
-        this.period = period;
-        this.length = lenght;
-        this.radius = redius;
+class Solenoid extends ParametricCurve {
+
+  constructor(period = 10, length = 4, radius = 2) {
+    super();
+
+    this.type = "parametric";
+
+    this.period = period;
+    this.length = length;
+    this.radius = radius;
+  }
+
+  getPoint(t, optionalTarget = new Vector3()) {
+    if (!(0 <= t <= 1)) {
+      console.error("t value must between 0 and 1");
     }
+
+    const x = this.radius * Math.sin(2 * Math.PI * this.period * t);
+    const y = this.length * t;
+    const z = this.radius * Math.cos(2 * Math.PI * this.period * t);
+
+    return optionalTarget.set(x, y, z);
+  }
+
+  getDevivative(t, optionalTarget = new Vector3()) {
+    const x =
+      this.radius *
+      Math.cos(2 * Math.PI * this.period * t) *
+      2 *
+      Math.PI *
+      this.period;
+    const y = this.length;
+    const z =
+      -this.radius *
+      Math.sin(2 * Math.PI * this.period * t) *
+      2 *
+      Math.PI *
+      this.period;
+
+    return optionalTarget.set(x, y, z);
+  }
+
+  onChange(func) {
+    this.__onChange = func
+  }
+
+  addController (folder) {
+    folder.add(this, 'period', 0, 50, 1).onChangeFinish((value) => {this.onChange('period', value)})
+    folder.add(this, 'length', 0, 5, 0.1).onChangeFinish((value) => {this.onChange('length', value)})
+    folder.add(this, 'radius', 0, 5, 0.1).onChangeFinish((value) => {this.onChange('radius', value)})
     
-    getPoint(t, optionalTarget = new Vector3()) {
-    	    if !(0 <= t <= 1) {
-    	    	console.error("t value must between 0 and 1");
-    	    }
-            
-            x = this.radius*Math.cos(2*Math.pi*this.period*t)
-    	    y = this.radius*Math.sin(2*Math.pi*this.period*t)
-            z = this.length*t
-            
-    	    return optionalTarget.set(x, y, z)
-    }
+    return this
+  }
 }
 
-export { Soleniod };
+export { Solenoid };

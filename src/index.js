@@ -1,8 +1,13 @@
 import * as THREE from "three";
-import { LineBasicMaterial } from "three";
-//import { TransformControls } from "three/examples/jsm/controls/TransformControls";
+import { GUI } from "dat.gui";
+import Stats from "three/examples/jsm/libs/stats.module";
+import { Solenoid } from "./curve/Solenoid.js";
+import { Toroid } from "./curve/Toroid.js";
+
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { Soleniod } from "./Curve/Soleniod.js";
+
+import { MagneticField } from "./MagneticField.js";
+import { Vector3 } from "three";
 
 // initialize
 const scene = new THREE.Scene();
@@ -12,44 +17,137 @@ const camera = new THREE.PerspectiveCamera(
   0.1,
   1000
 );
+camera.position.set(5, 5, 5);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// add helper
+const controls = new OrbitControls(camera, renderer.domElement);
+
+const stats = Stats();
+document.body.appendChild(stats.dom);
+
+var setting = {
+  curve: {
+    type: "soleniod",
+    tubularSegments: 1000,
+    radius: 0.1,
+    radialSegments: 8,
+    close: false
+  }
+};
+
+const copper_material = new THREE.MeshPhongMaterial({ color: "orange" });
+
+const curves = {solenoid: new Solenoid(),
+                toroid: new Toroid(),
+}
+
 const grid = new THREE.GridHelper(10, 10);
 const axis = new THREE.AxesHelper(5);
 
-// add controler
-const controls = new OrbitControls(camera, renderer.domElement);
-//const transform = new TransformControls(camera, renderer.domElement);
+const tube = new THREE.Mesh(
+  new THREE.TubeGeometry(
+    curves[setting.curve.type],
+    setting.curve.tubularSegments,
+    setting.curve.radius,
+    setting.curve.radialSegments,
+    setting.curve.close
+  ),
+  copper_material
+);
 
-// add geomatry
-const seleniod = new Solenoid(10,4,1);
+const gui = new GUI();
 
-// add material
-const red = new LineBasicMaterial({ color: "red"});
+const curves_menu = {solenoid: gui.addFolder("Solenoid"),
+                        toroid: gui.addFolder("Toroid")
+}
 
-// add mesh
-const curve = new THREE.Line(soleniod.getPoints(100), red);
+const magneticField = new MagneticField(curves[setting.curve.type]);
 
-// set control poperties
-controls.enableDamping = true;
+initialScene();
 
-// add mesh to the scene
-scene.add(grid, axis);
-scene.add(line);
+function handledPropertyChange() {
+  megeticField.updateVectorField()
+  updateTubeGeometry()
+}
 
-camera.position.set(5, 5, 5);
-controls.update();
+function handledCurveChange (type) {
+  magneticField.parametric = curves[type]
+  
+  for (const type in curves_setting) {
+    curves_menu[type].hide()
+  }
+  
+  curves_menu[type].show()
+  curves_menu[type].open()
+
+  megeticField.updateVectorField()
+  updateTubeGeometry()
+}
+
+function updateTubeGeometry() {
+  tube.geometry = new THREE.TubeGeometry(
+    curves[setting.curve.type],
+    setting.curve.tubularSegments,
+    setting.curve.radius,
+    setting.curve.radialSegments,
+    setting.curve.close
+  )
+}
+
+function initialGUI() {
+  //add gui
+  gui
+    .add(grid, "visible")
+    .name("grid visible")
+  gui
+    .add(axis, "visible")
+    .name("axis visible")
+  
+  gui.add(setting.curve, 'type', ['solenoid','toroid']).name('curve type').onChange(handleCurveChange)
+
+  curves['solenoid'].addController(curves_menu['solenoid']).onChange(handlePropertyChange)
+  curves['toroid'].addController(curves_menu['toroid']).onChange(handlePropertyChange)
+  
+  curves_menu['toroid'].hide()
+}
+
+function initialScene() {
+  //add lights
+  const ambiant = new THREE.AmbientLight(0x404040);
+  const light = new THREE.PointLight(0xff0000, 1, 100);
+  light.position.set(5, 5, 5);
+
+  // set control poperties
+  controls.enableDamping = true;
+
+  // add mesh to the scene
+  scene.add(tube);
+  scene.add(ambiant);
+  scene.add(light);
+  scene.add(magneticField);
+
+  initialGUI();
+  window.addEventListener("resize", onResize);
+
+  animate();
+  updateScene();
+}
 
 function animate() {
   requestAnimationFrame(animate);
 
   controls.update();
 
+  stats.update();
   renderer.render(scene, camera);
 }
 
-animate();
+function onResize() {
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  camera.aspect = window.innerWidth / window.innerHeight;
+
+  camera.updateProjectionMatrix();
+}
