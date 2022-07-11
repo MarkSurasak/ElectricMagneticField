@@ -18,6 +18,7 @@ class MagneticField extends VectorField {
     this.delta = 1 / this.precision;
 
     this.generateVectorField();
+    this.updateVectorField();
   }
 
   getVector(position, optionalTarget = new Vector3(0, 0, 0)) {
@@ -28,7 +29,7 @@ class MagneticField extends VectorField {
 
       direction.subVectors(position, point);
 
-      const distance = Math.power(direction.length(),3);
+      const distance = Math.pow(direction.length(), 3);
 
       return tangent.cross(direction).divideScalar(distance);
     };

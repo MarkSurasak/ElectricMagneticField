@@ -7,7 +7,6 @@ import { Toroid } from "./curve/Toroid.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import { MagneticField } from "./MagneticField.js";
-import { Vector3 } from "three";
 
 // initialize
 const scene = new THREE.Scene();
@@ -30,7 +29,7 @@ document.body.appendChild(stats.dom);
 
 var setting = {
   curve: {
-    type: "soleniod",
+    type: "solenoid",
     tubularSegments: 1000,
     radius: 0.1,
     radialSegments: 8,
@@ -40,9 +39,7 @@ var setting = {
 
 const copper_material = new THREE.MeshPhongMaterial({ color: "orange" });
 
-const curves = {solenoid: new Solenoid(),
-                toroid: new Toroid(),
-}
+const curves = { solenoid: new Solenoid(), toroid: new Toroid() };
 
 const grid = new THREE.GridHelper(10, 10);
 const axis = new THREE.AxesHelper(5);
@@ -60,31 +57,32 @@ const tube = new THREE.Mesh(
 
 const gui = new GUI();
 
-const curves_menu = {solenoid: gui.addFolder("Solenoid"),
-                        toroid: gui.addFolder("Toroid")
-}
+const curves_menu = {
+  solenoid: gui.addFolder("Solenoid"),
+  toroid: gui.addFolder("Toroid")
+};
 
 const magneticField = new MagneticField(curves[setting.curve.type]);
 
 initialScene();
 
 function handledPropertyChange() {
-  megeticField.updateVectorField()
-  updateTubeGeometry()
+  magneticField.updateVectorField();
+  updateTubeGeometry();
 }
 
-function handledCurveChange (type) {
-  magneticField.parametric = curves[type]
-  
-  for (const type in curves_setting) {
-    curves_menu[type].hide()
-  }
-  
-  curves_menu[type].show()
-  curves_menu[type].open()
+function handledCurveChange(type) {
+  magneticField.parametric = curves[type];
 
-  megeticField.updateVectorField()
-  updateTubeGeometry()
+  for (const type in curves_menu) {
+    curves_menu[type].hide();
+  }
+
+  curves_menu[type].show();
+  curves_menu[type].open();
+
+  magneticField.updateVectorField();
+  updateTubeGeometry();
 }
 
 function updateTubeGeometry() {
@@ -94,24 +92,27 @@ function updateTubeGeometry() {
     setting.curve.radius,
     setting.curve.radialSegments,
     setting.curve.close
-  )
+  );
 }
 
 function initialGUI() {
   //add gui
-  gui
-    .add(grid, "visible")
-    .name("grid visible")
-  gui
-    .add(axis, "visible")
-    .name("axis visible")
-  
-  gui.add(setting.curve, 'type', ['solenoid','toroid']).name('curve type').onChange(handleCurveChange)
+  gui.add(grid, "visible").name("grid visible");
+  gui.add(axis, "visible").name("axis visible");
 
-  curves['solenoid'].addController(curves_menu['solenoid']).onChange(handlePropertyChange)
-  curves['toroid'].addController(curves_menu['toroid']).onChange(handlePropertyChange)
-  
-  curves_menu['toroid'].hide()
+  gui
+    .add(setting.curve, "type", ["solenoid", "toroid"])
+    .name("curve type")
+    .onChange(handledCurveChange);
+
+  curves["solenoid"]
+    .addController(curves_menu["solenoid"])
+    .onFinishChange(handledPropertyChange);
+  curves["toroid"]
+    .addController(curves_menu["toroid"])
+    .onFinishChange(handledPropertyChange);
+
+  curves_menu["toroid"].hide();
 }
 
 function initialScene() {
@@ -127,13 +128,13 @@ function initialScene() {
   scene.add(tube);
   scene.add(ambiant);
   scene.add(light);
+  scene.add(grid, axis);
   scene.add(magneticField);
 
   initialGUI();
   window.addEventListener("resize", onResize);
 
   animate();
-  updateScene();
 }
 
 function animate() {

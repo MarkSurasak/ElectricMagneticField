@@ -2,7 +2,6 @@ import { ParametricCurve } from "./ParametricCurve.js";
 import { Vector3 } from "three";
 
 class Solenoid extends ParametricCurve {
-
   constructor(period = 10, length = 4, radius = 2) {
     super();
 
@@ -43,16 +42,22 @@ class Solenoid extends ParametricCurve {
     return optionalTarget.set(x, y, z);
   }
 
-  onChange(func) {
-    this.__onChange = func
+  onFinishChange(func) {
+    this.onFinishChange = func;
   }
 
-  addController (folder) {
-    folder.add(this, 'period', 0, 50, 1).onChangeFinish((value) => {this.onChange('period', value)})
-    folder.add(this, 'length', 0, 5, 0.1).onChangeFinish((value) => {this.onChange('length', value)})
-    folder.add(this, 'radius', 0, 5, 0.1).onChangeFinish((value) => {this.onChange('radius', value)})
-    
-    return this
+  addController(folder) {
+    folder.add(this, "period", 0, 50, 1).onFinishChange((value) => {
+      this.onFinishChange("period", value);
+    });
+    folder.add(this, "length", 0, 5, 0.1).onFinishChange((value) => {
+      this.onFinishChange("length", value);
+    });
+    folder.add(this, "radius", 0, 5, 0.1).onFinishChange((value) => {
+      this.onFinishChange("radius", value);
+    });
+
+    return this;
   }
 }
 
