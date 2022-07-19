@@ -7,6 +7,8 @@ import { Toroid } from "./curve/Toroid.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import { MagneticField } from "./MagneticField.js";
+import { Particle } from "./Particle";
+import { Points, PointsMaterial } from "three";
 
 // initialize
 const scene = new THREE.Scene();
@@ -130,6 +132,7 @@ function initialScene() {
   scene.add(light);
   scene.add(grid, axis);
   scene.add(magneticField);
+  scene.add(new Points(new Particle(), new PointsMaterial({ size: 0.05 })));
 
   initialGUI();
   window.addEventListener("resize", onResize);
