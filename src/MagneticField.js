@@ -7,7 +7,7 @@ class MagneticField extends VectorField {
   constructor(
     parametric = new Solenoid(10, 4, 2),
     cerrent = 1,
-    sampleRate = 500
+    precision = 500
   ) {
     super();
 
@@ -15,32 +15,32 @@ class MagneticField extends VectorField {
     this.current = cerrent;
     this.precision = precision;
 
-    this.delta = 1 / this.sampleRate;
-    
+    this.delta = 1 / this.precision;
+
     this.updateSample();
     this.generateVectorField();
     this.updateVectorField();
   }
 
   updateSample() {
-    let samplePoints = []
-    let sanpleDerivatives = []
-    
+    let samplePoints = [];
+    let sampleDerivatives = [];
+
     for (let n = 0; n <= this.sampleRate; n++) {
       const t = this.delta * n;
 
-      samplePoints.push(this.parametric.getPoint(t))
-      sampleDerivatives.push(this.parametric.getDerivative(t))
+      samplePoints.push(this.parametric.getPoint(t));
+      sampleDerivatives.push(this.parametric.getDerivative(t));
     }
 
-    this.samplePoints = samplePoints
-    this.sampleDerivatives = sampleDerivative
+    this.samplePoints = samplePoints;
+    this.sampleDerivatives = sampleDerivatives;
   }
 
   getVector(position, optionalTarget = new Vector3(0, 0, 0)) {
-    const func = (n) => {
-      const point = this.samplePoint[n];
-      const tangent = this.sampleDerivative[n];
+    const func = (t) => {
+      const point = this.parametric.getPoint(t);
+      const tangent = this.parametric.getDerivative(t);
       const direction = new Vector3();
 
       direction.subVectors(position, point);
@@ -54,7 +54,7 @@ class MagneticField extends VectorField {
 
     optionalTarget.add(func(0));
 
-    for (let n = 1; n < this.sampleRate; n++) {
+    for (let n = 1; n < this.precision; n++) {
       const t = this.delta * n;
 
       if (n % 2 === 0) {
