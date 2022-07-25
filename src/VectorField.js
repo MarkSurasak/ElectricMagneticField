@@ -48,10 +48,10 @@ class VectorField extends Group {
   }
 
   generateVectorField() {
-    for (let x = this.start.x; x < this.end.x; x++) {
-      for (let y = this.start.y; y < this.end.y; y++) {
-        for (let z = this.start.z; z < this.end.z; z++) {
-          this.add(new ArrowHelper(new Vector3(), new Vector3(x, y, z)));
+    for (let x = this.start.x; x <= this.end.x; x++) {
+      for (let y = this.start.y; y <= this.end.y; y++) {
+        for (let z = this.start.z; z <= this.end.z; z++) {
+          this.add(new ArrowHelper(new Vector3(), new Vector3(x, y, z), 0.8));
         }
       }
     }
