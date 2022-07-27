@@ -1,17 +1,19 @@
-import { ArrowHelper, Box3, Group, Vector3, Matrix3, Color } from "three";
+import { ArrowHelper, Box3, Group, Vector3, Matrix3, Color, LineBasicMaterial, BufferGeometry, Mesh, Line } from "three";
 
 class VectorField extends Group {
   constructor(
+    param = {
+      minLength: 0,
+      maxLength: 1
+    },
     box = new Box3(new Vector3(-5, -5, -5), new Vector3(5, 5, 5)),
-    minLength = 0,
-    maxLength = 0.000001
   ) {
     super();
 
     this.setBorder(box);
 
-    this.minLength = minLength;
-    this.maxLength = maxLength;
+    this.minLength = param.minLength;
+    this.maxLength = param.maxLength;
   }
 
   setBorder(box) {
@@ -33,29 +35,56 @@ class VectorField extends Group {
     return optionalTaget;
   }
 
-  updateVectorField() {
-    for (let i = 0; i < this.children.length; i++) {
-      const vector = this.getVector(this.children[i].position);
-      const length = vector.lengthSq();
+  getPath(position = new Vector3(1,1,1), sampleRate = 50, time = 7, arrowEvery = 2) {
+    const points = [position]
+    const directional = new Group()
 
-      const t = (length - this.minLength) / (this.maxLength - this.minLength);
-      const color = new Color();
-      color.setHSL(t, 1, 0.5);
+    const delta = time/sampleRate
 
-      this.children[i].setDirection(vector.normalize());
-      this.children[i].setColor(color);
+    for(let n = 1; n < sampleRate;n++) {
+      const previous = points[n-1]
+      const direction = this.getVector(previous)
+
+      const next = new Vector3();
+      next.addVectors(previous, direction.multiplyScalar(delta))
+
+      points.push(next)
+
+      if(n%arrowEvery === 0 ) {
+        directional.add(new ArrowHelper(direction, previous, 0, new Color("rgb(255,255,255)")))
+      }
+
     }
+
+    console.log(points)
+
+    const geometry = new BufferGeometry().setFromPoints(points)
+
+    const line = new Line(geometry, new LineBasicMaterial({color: 'white'}))
+  
+    const result = new Group();
+
+    result.add(line)
+    result.add(directional)
+
+    return result
   }
 
   generateVectorField() {
     for (let x = this.start.x; x <= this.end.x; x++) {
       for (let y = this.start.y; y <= this.end.y; y++) {
         for (let z = this.start.z; z <= this.end.z; z++) {
-          this.add(new ArrowHelper(new Vector3(), new Vector3(x, y, z), 0.8));
+          const vector = this.getVector(new Vector3(x, y, z));
+          const length = vector.lengthSq();
+
+          const t = (length - this.minLength) / (this.maxLength - this.minLength);
+          const color = new Color("rgb(0,0,255)");
+          color.lerp(new Color("rgb(255,0,0)"), t);
+
+          this.add(new ArrowHelper(vector.normalize(),new Vector3(x, y, z),0.8,color));
         }
       }
     }
-    this.updateVectorField();
   }
 
   jacobianMatrix(position, optionalTaget = new Matrix3()) {
@@ -85,4 +114,18 @@ class VectorField extends Group {
   }
 }
 
-export { VectorField };
+class Vertex extends VectorField {
+  getVector(position, optionalTaget = new Vector3()) {
+    const {x, y} = position
+
+    const p = -y
+    const q = x
+    const r = 0
+
+    return optionalTaget.set(p,q,r)
+  }
+}
+
+export { VectorField, Vertex };
+
+

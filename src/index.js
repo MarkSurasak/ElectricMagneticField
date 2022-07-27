@@ -8,6 +8,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 
 import { MagneticField } from "./MagneticField.js";
 import { Group, Mesh, TubeGeometry } from "three";
+import { Vertex } from "./VectorField";
 
 // initialize
 const scene = new THREE.Scene();
@@ -87,12 +88,14 @@ function getCurveIndexFromName(name) {
 }
 
 function handledPropertyChange() {
+  let curve = curves[setting.currentCurveIndex];
+
   directional_group.children[setting.currentCurveIndex] = curves[
     setting.currentCurveIndex
   ].getDirectionals(setting.directional_sampleRate);
-  vectorFields.children[setting.currentCurveIndex].updateVectorField();
+  vectorFields.children[setting.currentCurveIndex] = new MagneticField(curve);
   curves_group.children[setting.currentCurveIndex].geometry = new TubeGeometry(
-    curves[setting.currentCurveIndex],
+    curve,
     1000,
     setting.curveRadius,
     8
@@ -171,9 +174,17 @@ function initialScene() {
   scene.add(ambiant);
   scene.add(light);
   scene.add(grid, axis);
-  scene.add(directional_group);
-  scene.add(curves_group);
-  scene.add(vectorFields);
+  // scene.add(directional_group);
+  // scene.add(curves_group);
+  // scene.add(vectorFields);
+
+  //scene.add(vectorFields.children[0].getPath())
+
+  const vertex = new Vertex({ maxLength: 50, minLength: 1 });
+  vertex.generateVectorField();
+
+  scene.add(vertex);
+  scene.add(vertex.getPath());
 
   upadateCurve();
 }

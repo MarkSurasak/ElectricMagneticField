@@ -19,7 +19,6 @@ class MagneticField extends VectorField {
 
     this.updateSample();
     this.generateVectorField();
-    this.updateVectorField();
   }
 
   updateSample() {
